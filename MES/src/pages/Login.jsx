@@ -59,7 +59,7 @@ class Login extends Component {
             <button type="submit" className="login-button">Login</button>
 
             <p className="text-center">
-              New User? <a href="#" className="register">Register</a>
+              New User? <a href="/register" className="register">Register</a>
             </p>
             <p className="text-center">
               <a href="#" className="reset">Forgot Password?</a>
