@@ -61,7 +61,7 @@ class Reset extends Component {
             </button>
 
             <p className="text-center">
-              New User? <a href="#" className="register">Register</a>
+              New User? <a href="/register" className="register">Register</a>
             </p>
           </form>
         </div>

@@ -62,7 +62,7 @@ class Login extends Component {
               New User? <a href="/register" className="register">Register</a>
             </p>
             <p className="text-center">
-              <a href="#" className="reset">Forgot Password?</a>
+              <a href="/reset" className="reset">Forgot Password?</a>
             </p>
           </form>
         </div>
