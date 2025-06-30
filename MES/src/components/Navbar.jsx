@@ -16,7 +16,7 @@ export default function Navbar() {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <a className="navbar-brand" href="/">My App</a>
+          <a className="navbar-brand" href="/">Logout</a>
         </div>
       </nav>
     </>
