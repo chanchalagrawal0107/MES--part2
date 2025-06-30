@@ -16,11 +16,11 @@ const alarmDbConfig = {
 const poolPromise = new sql.ConnectionPool(alarmDbConfig)
   .connect()
   .then(pool => {
-    console.log("✅ Connected to Alarms Database");
+    console.log("Connected to Alarms Database");
     return pool;
   })
   .catch(err => {
-    console.log("❌ Alarms DB connection error:", err.message);
+    console.log("Alarms DB connection error:", err.message);
     throw err;
   });
 

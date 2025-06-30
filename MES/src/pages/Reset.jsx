@@ -6,7 +6,7 @@ class Reset extends Component {
     super(props);
     this.state = {
       username: '',
-      emailID: '',
+      password: '',
     };
   }
 
@@ -15,11 +15,35 @@ class Reset extends Component {
     this.setState({ [name]: value });
   };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    const { username, emailID } = this.state;
-    this.props.onreset(username, emailID);
-  };
+  handleSubmit = async (event) => {
+  event.preventDefault();
+  const { username, password } = this.state;
+  
+  try {
+    const response = await fetch('http://localhost:5000/api/resetpassword', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        username: username,
+        newPassword: password,
+      }),
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      alert('Password reset successful!');
+      this.props.navigate('/');
+    } else {
+      alert(data.message || 'Password reset failed');
+    }
+  } catch (error) {
+    console.error('Reset error:', error);
+    alert('Something went wrong during password reset.');
+  }
+};
 
   render() {
     return (
@@ -43,14 +67,14 @@ class Reset extends Component {
             </div>
 
             <div className="password">
-              <label htmlFor="emailID" className="form-label"><b>Email</b></label>
+              <label htmlFor="password" className="form-label"><b>New Password</b></label>
               <input
-                type="email"
-                id="emailID"
-                name="emailID"
+                type="password"
+                id="password"
+                name="password"
                 className="form-control"
-                placeholder="Enter your email"
-                value={this.state.emailID}
+                placeholder="Enter new password"
+                value={this.state.password}
                 onChange={this.handleChange}
                 required
               />

@@ -1,9 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const alarmRoutes = require("./routes/alarmsapi"); 
-
-
-// const authRoutes = require("../routes/auth");
+const authRoutes = require("./routes/auth");
 // require('dotenv').config();
 // const { sql, poolPromise } = require('./db/alarmsdb');
 
@@ -28,8 +26,7 @@ app.get("/", (req, res) => {
 // });
 
 
-// app.use('/api', authRoutes);
-
+app.use('/api', authRoutes);
 app.use('/api', alarmRoutes);
 
 app.listen(process.env.PORT || 5000, () =>{

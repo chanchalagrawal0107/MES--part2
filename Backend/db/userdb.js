@@ -13,7 +13,7 @@ const userDbConfig = {
   port: 1433,
 };
 
-const userPool = new sql.ConnectionPool(userDbConfig)
+const poolPromise = new sql.ConnectionPool(userDbConfig)
   .connect()
   .then(pool => {
     console.log("Connected to User Database");
@@ -21,4 +21,4 @@ const userPool = new sql.ConnectionPool(userDbConfig)
   })
   .catch(err => console.log("User DB connection error:", err));
 
-module.exports = { sql, userPool };
+module.exports = { sql, poolPromise };
