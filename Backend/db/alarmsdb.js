@@ -8,7 +8,6 @@ const alarmDbConfig = {
   options: {
     trustServerCertificate: true,
     enableArithAbort: true,
-    instancename: "mssql",
   },
   port: 1433,
 };
