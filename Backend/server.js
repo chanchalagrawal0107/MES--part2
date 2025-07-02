@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const alarmRoutes = require("./routes/alarmsapi"); 
 const authRoutes = require("./routes/auth");
+const assetCentreRoutes = require("./routes/assetcentre_api");
 // require('dotenv').config();
 // const { sql, poolPromise } = require('./db/alarmsdb');
 
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 
 app.use('/api', authRoutes);
 app.use('/api', alarmRoutes);
+app.use('/api', assetCentreRoutes);
 
 app.listen(process.env.PORT || 5000, () =>{
   console.log(`Server running on port ${process.env.PORT || 5000}`)

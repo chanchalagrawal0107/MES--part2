@@ -31,6 +31,22 @@
             "name": "mssql",
             "database": "User Database",
             "username": "sa"
+        },
+        {
+            "connectionTimeout": 30,
+            "mssqlOptions": {
+                "appName": "SQLTools",
+                "useUTC": true,
+                "encrypt": true,
+                "trustServerCertificate": true
+            },
+            "previewLimit": 50,
+            "server": "rapc",
+            "port": 1433,
+            "driver": "MSSQL",
+            "name": "mssql",
+            "database": "AssetCentre",
+            "username": "sa"
         }
     ]
 }
