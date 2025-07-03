@@ -94,3 +94,28 @@
   text-decoration: underline;
   font-weight: bold;
 }
+/* Dashboard container with spacing between cards */
+.dashboard-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Dashboard card styling */
+.dashboard-card {
+  width: 20rem;
+  height: 5rem;
+  cursor: pointer;
+  text-align: center;
+  padding: 13px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.dashboard-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
