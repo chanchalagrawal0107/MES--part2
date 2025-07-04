@@ -8,6 +8,7 @@ class Register extends Component {
       username: '',
       password: '',
       emailID: '',
+      role: '',
     };
   }
 
@@ -18,7 +19,7 @@ class Register extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { username, password, emailID } = this.state;
+    const { username, password, emailID, role } = this.state;
 
     try {
       const response = await fetch('http://localhost:5000/api/register', {
@@ -27,7 +28,8 @@ class Register extends Component {
         body: JSON.stringify({
           username,
           email: emailID,
-          password
+          password,
+          role
         }),
       });
 
@@ -91,6 +93,23 @@ class Register extends Component {
                 onChange={this.handleChange}
                 required
               />
+            </div>
+
+            <div className="role">
+              <label htmlFor="role" className="form-label"><b>Role</b></label>
+              <select
+                id="role"
+                name="role"
+                className="form-control"
+                value={this.state.role}
+                onChange={this.handleChange}
+                required
+              >
+                <option value= "" disabled>Select Role</option>
+                <option value="Author">Author</option>
+                <option value="Reviewer">Reviewer</option>
+                <option value="Approver">Approver</option>
+              </select>
             </div>
 
             <button type="submit" className="login-button">Register</button>

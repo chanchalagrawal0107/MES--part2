@@ -7,6 +7,7 @@ class Login extends Component {
     this.state = {
       username: '',
       password: '',
+      role:'',
     };
   }
 
@@ -17,7 +18,7 @@ class Login extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { username, password } = this.state;
+    const { username, password, role } = this.state;
 
     try {
       const response = await fetch('http://localhost:5000/api/login', {
@@ -28,6 +29,7 @@ class Login extends Component {
         body: JSON.stringify({
           username,  
           password,
+          role,
         }),
       });
 
@@ -37,9 +39,10 @@ class Login extends Component {
         // Optional: Save token if you're using JWT
         if (data.token) {
           localStorage.setItem('authToken', data.token);
+          localStorage.setItem('userRole', role);
         }
 
-        this.props.onLogin(username, password);
+        this.props.onLogin(username, password, role);
       } else {
         alert(data.message || 'Login failed');
       }
@@ -56,7 +59,9 @@ class Login extends Component {
           <h2 className="h2">Login</h2>
           <form onSubmit={this.handleSubmit}>
             <div className="username">
-              <label htmlFor="username" className="form-label">Username</label>
+              <label htmlFor="username" className="form-label">
+                Username
+              </label>
               <input
                 type="text"
                 id="username"
@@ -70,7 +75,9 @@ class Login extends Component {
             </div>
 
             <div className="password">
-              <label htmlFor="password" className="form-label">Password</label>
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
               <input
                 type="password"
                 id="password"
@@ -83,13 +90,41 @@ class Login extends Component {
               />
             </div>
 
-            <button type="submit" className="login-button">Login</button>
+            <div className="role">
+              <label htmlFor="role" className="form-label">
+                <b>Role</b>
+              </label>
+              <select
+                id="role"
+                name="role"
+                className="form-control"
+                value={this.state.role}
+                onChange={this.handleChange}
+                required
+              >
+                <option value="" disabled>
+                  Select Role
+                </option>
+                <option value="Author">Author</option>
+                <option value="Reviewer">Reviewer</option>
+                <option value="Approver">Approver</option>
+              </select>
+            </div>
+
+            <button type="submit" className="login-button">
+              Login
+            </button>
 
             <p className="text-center">
-              New User? <a href="/register" className="register">Register</a>
+              New User?{" "}
+              <a href="/register" className="register">
+                Register
+              </a>
             </p>
             <p className="text-center">
-              <a href="/reset" className="reset">Forgot Password?</a>
+              <a href="/reset" className="reset">
+                Forgot Password?
+              </a>
             </p>
           </form>
         </div>

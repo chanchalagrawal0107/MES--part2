@@ -119,3 +119,20 @@
   transform: scale(1.03);
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+
+.content-container {
+  padding: 20px;
+}
+
+.report-box {
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 600px;
+  border-radius: 10px;
+}
+
+.button-container {
+  margin-top: 20px;
+}

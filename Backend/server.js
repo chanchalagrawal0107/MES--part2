@@ -4,6 +4,9 @@ const alarmRoutes = require("./routes/alarmsapi");
 const authRoutes = require("./routes/auth");
 const assetCentreRoutes = require("./routes/assetcentre_api");
 const ssrsRoutes = require("./routes/ssrs_reports");
+const authorAPI = require("./routes/authorapi");
+const reviewerAPI = require("./routes/reviewerapi");
+const approverAPI = require("./routes/approverapi");
 const axios = require('axios');
 const port = 5000;
 
@@ -20,6 +23,9 @@ app.use('/api', authRoutes);
 app.use('/api', alarmRoutes);
 app.use('/api', assetCentreRoutes);
 app.use('/api', ssrsRoutes);
+app.use("/api", authorAPI);
+app.use("/api", reviewerAPI);
+app.use("/api", approverAPI);
 
 app.listen(process.env.PORT || 5000, () =>{
   console.log(`Server running on port ${process.env.PORT || 5000}`)

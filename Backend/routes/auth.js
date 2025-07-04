@@ -8,9 +8,9 @@ const JWT_EXPIRES = process.env.JWT_EXPIRES || '1d';
 
 // Register API
 router.post('/register', async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, role } = req.body;
 
-  if (!username || !email || !password) {
+  if (!username || !email || !password || !role) {
     return res.status(400).json({ message: 'Please provide all required fields' });
   }
 
@@ -31,7 +31,8 @@ router.post('/register', async (req, res) => {
       .input('username', sql.VarChar, username)
       .input('email', sql.VarChar, email)
       .input('password', sql.VarChar, password)
-      .query('INSERT INTO Users (username, emailId, password) VALUES (@username, @email, @password)');
+      .input('role', sql.VarChar, role)
+      .query('INSERT INTO Users (username, emailId, password, role) VALUES (@username, @email, @password, @role)');
 
     // Issue token
     const token = jwt.sign({username }, JWT_SECRET, { expiresIn: JWT_EXPIRES });
@@ -50,11 +51,11 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, role } = req.body;
     console.log('Login payload:', username, password); // 🧪 Log input
     
-    if (!username || !password) {
-      return res.status(400).json({ message: 'Please provide email and password' });
+    if (!username || !password || !role) {
+      return res.status(400).json({ message: 'Please provide email, password and correct role' });
     }
     
     const pool = await poolPromise;
@@ -65,7 +66,7 @@ router.post('/login', async (req, res) => {
     
     const user = result.recordset[0];
     
-    if (!user || user.password !== password) {
+    if (!user || user.password !== password || user.role !==role) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
     
@@ -78,6 +79,7 @@ router.post('/login', async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.emailId,
+        role: user.role,
       }
     });
   } catch (err) {
@@ -102,7 +104,7 @@ router.get('/verify', async (req, res) => {
     
     const result = await pool.request()
     .input('username', sql.VarChar, decoded.username)
-    .query('SELECT id, username, emailId FROM Users WHERE username = @username');
+    .query('SELECT id, username, emailId, role FROM Users WHERE username = @username');
     
     const user = result.recordset[0];
 

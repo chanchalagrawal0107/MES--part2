@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const ntlm = require("httpntlm");
 
 // SSRS Configuration
 const SSRS_REST_URL = "http://nitrov/Reports/api/v2.0";
