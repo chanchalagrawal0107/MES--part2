@@ -7,6 +7,7 @@ const ssrsRoutes = require("./routes/ssrs_reports");
 const authorAPI = require("./routes/authorapi");
 const reviewerAPI = require("./routes/reviewerapi");
 const approverAPI = require("./routes/approverapi");
+const reportRoutes = require("./routes/reportRoutes");
 const axios = require('axios');
 const port = 5000;
 
@@ -24,8 +25,13 @@ app.use('/api', alarmRoutes);
 app.use('/api', assetCentreRoutes);
 app.use('/api', ssrsRoutes);
 app.use("/api", authorAPI);
-app.use("/api", reviewerAPI);
+app.use("/", reviewerAPI);
 app.use("/api", approverAPI);
+
+app.use(express.urlencoded({extended: true}));
+app.use("/api/reports", reportRoutes);
+
+
 
 app.listen(process.env.PORT || 5000, () =>{
   console.log(`Server running on port ${process.env.PORT || 5000}`)

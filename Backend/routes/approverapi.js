@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const sql = require('mssql');
-const { poolPromise } = require('../db/userdb');
+const { poolPromise } = require('../db/alarmsdb');
 
 // Get all reports ready for approval
 app.get('/api/reports/approve', async (req, res) => {
@@ -18,20 +18,20 @@ app.get('/api/reports/approve', async (req, res) => {
 
 // Approve and sign
 app.post('/api/reports/approve', async (req, res) => {
-  const { reportId, approverName } = req.body;
+  const { id, approver } = req.body;
 
   try {
     const pool = await poolPromise;
 
     await pool.request()
-      .input('id', sql.Int, reportId)
-      .input('approver', sql.VarChar, approverName)
-      .input('signedAt', sql.DateTime, new Date())
+      .input('id', sql.Int, id)
+      .input('approver', sql.VarChar, approver)
+      .input('approver_signed_at', sql.DateTime, new Date())
       .query(`
         UPDATE Reports 
         SET status = 'Approved', 
             approver = @approver, 
-            approver_signed_at = @signedAt,
+            approver_signed_at = @approver_signed_at,
             approverSign = 1 
         WHERE id = @id
       `);

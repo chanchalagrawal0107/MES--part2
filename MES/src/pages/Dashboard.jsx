@@ -190,6 +190,8 @@ import Sidebar from "../components/Sidebar.jsx";
 import AuthorCards from "../components/AuthorCards.jsx";
 import ReviewerCard from "../components/ReviewerCard.jsx";
 import ApproverCard from "../components/ApproverCard.jsx";
+import AuthorUpload from "../components/AuthorUpload.jsx";
+
 
 class Dashboard extends Component {
   constructor(props) {
@@ -216,6 +218,7 @@ class Dashboard extends Component {
           {role === "Reviewer" && <ReviewerCard />}
           {role === "Approver" && <ApproverCard />}
         </div>
+        
       </>
     );
   }
