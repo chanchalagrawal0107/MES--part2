@@ -1,10 +1,10 @@
 const express = require('express');
-const app = express();
+const router = express.Router();
 const sql = require('mssql');
 const { poolPromise } = require('../db/alarmsdb');
 
-// Get all reports ready for approval
-app.get('/api/reports/approve', async (req, res) => {
+// GET /api/reports/approve
+router.get('/approve', async (req, res) => {
   try {
     const pool = await poolPromise;
     const result = await pool.request().query(
@@ -12,16 +12,25 @@ app.get('/api/reports/approve', async (req, res) => {
     );
     res.json(result.recordset);
   } catch (err) {
-    res.status(500).json({ message: 'Error fetching reports for approval' });
+    console.error("Error fetching approval reports:", err);
+    res.status(500).json({ error: 'Failed to fetch approval reports' });
   }
 });
 
-// Approve and sign
-app.post('/api/reports/approve', async (req, res) => {
+// POST /api/reports/approve
+router.post('/reports/approve', async (req, res) => {
   const { id, approver } = req.body;
 
   try {
     const pool = await poolPromise;
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .query('SELECT filepath FROM Reports WHERE id = @id');
+
+    const oldPath = path.join(__dirname, '../reports/reviewed', result.recordset[0].filepath);
+    const newPath = path.join(__dirname, '../reports/approved', result.recordset[0].filepath);
+
+    fs.renameSync(oldPath, newPath);
 
     await pool.request()
       .input('id', sql.Int, id)
@@ -36,10 +45,12 @@ app.post('/api/reports/approve', async (req, res) => {
         WHERE id = @id
       `);
 
-    res.status(200).json({ message: 'Report approved successfully' });
+    res.status(200).json({ message: 'Report approved and moved to approved folder' });
   } catch (err) {
+    console.error('Approver error:', err);
     res.status(500).json({ message: 'Error approving report' });
   }
 });
 
-module.exports = app;
+
+module.exports = router;

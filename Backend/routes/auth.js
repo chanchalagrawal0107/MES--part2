@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const { sql, poolPromise } = require('../db/userdb');  
 
 const JWT_SECRET = "Rockwell1";
-const JWT_EXPIRES = process.env.JWT_EXPIRES || '1d';
 
 // Register API
 router.post('/register', async (req, res) => {
@@ -35,7 +34,7 @@ router.post('/register', async (req, res) => {
       .query('INSERT INTO Users (username, emailId, password, role) VALUES (@username, @email, @password, @role)');
 
     // Issue token
-    const token = jwt.sign({username }, JWT_SECRET, { expiresIn: JWT_EXPIRES });
+    const token = jwt.sign({username }, JWT_SECRET);
 
     res.status(201).json({
       success: true,
@@ -70,7 +69,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
     
-    const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: JWT_EXPIRES });
+    const token = jwt.sign({ username }, JWT_SECRET);
     
     return res.json({
       success: true,

@@ -2,10 +2,7 @@ import React, { Component } from "react";
 
 class AuthorCards extends Component {
   handleAlarmsReport = () => {
-    window.open(
-      "http://nitrov/ReportServer/Pages/ReportViewer.aspx?%2fRockwell+Project+Report%2fAlarms+Report&rs:Command=Render",
-      "_blank"
-    );
+    window.location.href = "/author/reports";
   };
 
   handleAuditReport = () => {
@@ -37,3 +34,5 @@ class AuthorCards extends Component {
 }
 
 export default AuthorCards;
+
+

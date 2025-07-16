@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const sql = require('mssql');
-const { poolPromise } = require('../db/alarmsdb'); // Same DB
+const { poolPromise } = require('../db/alarmsdb');
 
-// ✅ Get all reports pending review
-router.get('/reports/review', async (req, res) => {
+// GET /api/reports/review (Pending review reports)
+router.get('/review', async (req, res) => {
   try {
     const pool = await poolPromise;
     const result = await pool.request().query(
@@ -12,21 +12,29 @@ router.get('/reports/review', async (req, res) => {
     );
     res.json(result.recordset);
   } catch (err) {
-    console.error('Error fetching reports:', err);
-    res.status(500).json({ message: 'Error fetching reports for review' });
+    console.error('Error fetching review reports:', err);
+    res.status(500).json({ error: 'Failed to fetch review reports' });
   }
 });
 
-// ✅ Review and sign the report
+// POST /api/reports/review (Sign as reviewer)
 router.post('/reports/review', async (req, res) => {
   const { reportId, reviewerName } = req.body;
 
   try {
     const pool = await poolPromise;
+    const result = await pool.request()
+      .input('id', sql.Int, reportId)
+      .query('SELECT filepath FROM Reports WHERE id = @id');
+
+    const oldPath = path.join(__dirname, '../reports/generated', result.recordset[0].filepath);
+    const newPath = path.join(__dirname, '../reports/reviewed', result.recordset[0].filepath);
+
+    fs.renameSync(oldPath, newPath);
 
     await pool.request()
       .input('id', sql.Int, reportId)
-      .input('reviewer', sql.VarChar, reviewerName)  // Corrected here
+      .input('reviewer', sql.VarChar, reviewerName)
       .input('reviewer_signed_at', sql.DateTime, new Date())
       .query(`
         UPDATE Reports 
@@ -37,11 +45,12 @@ router.post('/reports/review', async (req, res) => {
         WHERE id = @id
       `);
 
-    res.status(200).json({ message: 'Report marked as reviewed' });
+    res.status(200).json({ message: 'Report reviewed and moved to reviewed folder' });
   } catch (err) {
-    console.error('Error updating review:', err);
-    res.status(500).json({ message: 'Error updating review' });
+    console.error('Reviewer error:', err);
+    res.status(500).json({ message: 'Error reviewing report' });
   }
 });
+
 
 module.exports = router;

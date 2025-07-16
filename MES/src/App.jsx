@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Reports from "./components/Reports.jsx";
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,6 +15,7 @@ import Review from "./pages/Review.jsx";
 import Approve from "./pages/Approve.jsx";
 import ProtectedRouteWithRole from "./components/ProtectedRouteWithRole";
 import Unauthorized from "./pages/Unauthorized.jsx";
+import AuthorReports from "./components/AuthorReports.jsx";
 
 
 class App extends Component {
@@ -70,6 +72,7 @@ class App extends Component {
               )
             }
           />
+          <Route path="/author/reports" element={<AuthorReports />} />
           <Route path="/register" element={<this.RegisterWithNavigate />} />
           <Route path="/reset" element={<this.ResetWithNavigate />} />
           <Route
