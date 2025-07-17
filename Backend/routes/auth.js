@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { sql, poolPromise } = require('../db/userdb');  
-
 const JWT_SECRET = "Rockwell1";
 
 // Register API
@@ -34,7 +33,7 @@ router.post('/register', async (req, res) => {
       .query('INSERT INTO Users (username, emailId, password, role) VALUES (@username, @email, @password, @role)');
 
     // Issue token
-    const token = jwt.sign({username }, JWT_SECRET);
+    const token = jwt.sign({username: user.username, role: user.role }, JWT_SECRET);
 
     res.status(201).json({
       success: true,
@@ -58,7 +57,6 @@ router.post('/login', async (req, res) => {
     }
     
     const pool = await poolPromise;
-    
     const result = await pool.request()
     .input('username', sql.VarChar, username)
     .query('SELECT * FROM Users WHERE username = @username'); 
@@ -69,21 +67,11 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
     
-    const token = jwt.sign({ username }, JWT_SECRET);
-    
-    return res.json({
-      success: true,
-      token,
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.emailId,
-        role: user.role,
-      }
-    });
+    const token = jwt.sign({ username: user.username, role: user.role }, JWT_SECRET);
+    return res.json({ success: true, token, user: { id: user.id, username: user.username, role: user.role } });
   } catch (err) {
-    console.error('Login error:', err); 
-    return res.status(500).json({ message: 'Server error during login' });
+    console.error('Login error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 

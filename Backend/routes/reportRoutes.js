@@ -1,126 +1,10 @@
-// const express = require("express");
-// const router = express.Router();
-// const axios = require("axios");
-// const fs = require("fs");
-// const path = require("path");
-// const sql = require("mssql");
-// const pool = require("../db/alarmsdb"); // Your working DB config
-
-// router.get("/generatefromreport", async (req, res) => {
-//   const { reportName, username } = req.query;
-
-//   if (!reportName || !username) {
-//     return res.status(400).send("❌ Missing report name or username.");
-//   }
-
-//   const cleanedName = reportName.replace(/\s+/g, "_");
-//   const filePath = path.join(__dirname, "../reports/generated", `${cleanedName}_generated.pdf`);
-
-//   const reportUrl = `http://nitrov/ReportServer?/Rockwell Project Report/${encodeURIComponent(reportName)}&rs:Format=PDF`;
-
-//   console.log("📥 Fetching report from:", reportUrl);
-
-//   try {
-//     const response = await axios.get(reportUrl, {
-//       responseType: "arraybuffer",
-//       auth: {
-//         username: "sa",
-//         password: "Rockwell1",
-//       },
-//     });
-
-//     fs.writeFileSync(filePath, response.data);
-
-//     await pool.request()
-//       .input("data", sql.VarChar, cleanedName)
-//       .input("author", sql.VarChar, username)
-//       .input("author_signed_at", sql.DateTime, new Date())
-//       .input("status", sql.VarChar, "generated")
-//       .query(`
-//         INSERT INTO Reports (data, author, author_signed_at, status)
-//         VALUES (@data, @author, @author_signed_at, @status)
-//       `);
-
-//     res.send(`<h3>✅ Report saved to /generated folder successfully.</h3>`);
-//   } catch (err) {
-//     console.error("❌ SSRS ERROR:", err.message);
-//     res.status(500).send("❌ Failed to generate report.");
-//   }
-// });
-
-// module.exports = router;
-
-// const express = require("express");
-// const router = express.Router();
-// const fs = require("fs");
-// const path = require("path");
-// const sql = require("mssql");
-// const httpntlm = require('httpntlm');
-// // const axios = require("axios");
-// // const axiosNTLM = require("axios-ntlm").default;
-// const pool = require("../db/alarmsdb");
-
-// // NTLM Authentication Credentials
-// const ntlmConfig = {
-//   username: "chira",
-//   password: "8899",
-//   domain: "NITROV",
-//   workstation: "NitroV"
-// };
-
-// // Create axios instance with NTLM auth
-// // s
-
-// router.get("/generatefromreport", async (req, res) => {
-//   const { reportName, username } = req.query;
-
-//   if (!reportName || !username) {
-//     return res.status(400).send("❌ Missing report name or username.");
-//   }
-
-//   const cleanedName = reportName.replace(/\s+/g, "_");
-//   const filePath = path.join(__dirname, "../reports/generated", `${cleanedName}_generated.pdf`);
-//   const reportUrl = `http://nitrov/ReportServer?/Rockwell Project Report/${encodeURIComponent(reportName)}&rs:Format=PDF`;
-
-//   console.log("📥 Fetching report from:", reportUrl);
-
-//   try {
-//     const { body } = await httpntlm.get({
-//       url: reportUrl,
-//       username: 'NITROV\\chira', // Domain included
-//       password: '8899',
-//       workstation: 'NitroV'
-//     });
-
-//     fs.writeFileSync(filePath, body);
-
-//     await pool.request()
-//       .input("data", sql.VarChar, cleanedName)
-//       .input("author", sql.VarChar, username)
-//       .input("author_signed_at", sql.DateTime, new Date())
-//       .input("status", sql.VarChar, "generated")
-//       .query(`
-//         INSERT INTO Reports (data, author, author_signed_at, status)
-//         VALUES (@data, @author, @author_signed_at, @status)
-//       `);
-
-//     res.send(`<h3>✅ Report saved to /generated folder successfully.</h3>`);
-//   } catch (err) {
-//     console.error("❌ SSRS ERROR:", err.message);
-//     res.status(500).send("❌ Failed to generate report. Error: " + err.message);
-//   }
-// });
-
-// module.exports = router;
-
-
-
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 const { sql, poolPromise } = require("../db/alarmsdb"); // ✅ FIXED
 const httpntlm = require("httpntlm");
+const {checkRole} = require("../middleware/role");
 
 // Configuration constants
 const REPORT_SERVER_URL = "http://nitrov/ReportServer";
@@ -188,6 +72,37 @@ router.get("/generatefromreport", async (req, res) => {
     console.error("❌ SSRS ERROR:", err.message);
     res.status(500).send(`❌ Failed to generate report. Error: ${err.message}`);
   }
+});
+
+router.get('/files/reviewer', checkRole('Reviewer'), async (req, res) => {
+  const dirPath = path.join(__dirname, '../reports/generated');
+  const files = fs.readdirSync(dirPath);
+  res.json({ files });
+});
+
+// ✅ REVIEWER signs and moves to reviewed
+router.post('/sign', checkRole('Reviewer'), async (req, res) => {
+  const { filename, username } = req.body;
+  const src = path.join(__dirname, '../reports/generated', filename);
+  const dest = path.join(__dirname, '../reports/reviewed', filename.replace('generated', 'reviewed'));
+  fs.renameSync(src, dest);
+  res.json({ message: `✅ Signed by Reviewer ${username} and moved.` });
+});
+
+// ✅ APPROVER fetch reviewed files
+router.get('/files/approver', checkRole('Approver'), async (req, res) => {
+  const dirPath = path.join(__dirname, '../reports/reviewed');
+  const files = fs.readdirSync(dirPath);
+  res.json({ files });
+});
+
+// ✅ APPROVER signs and moves to approved
+router.post('/approve', checkRole('Approver'), async (req, res) => {
+  const { filename, username } = req.body;
+  const src = path.join(__dirname, '../reports/reviewed', filename);
+  const dest = path.join(__dirname, '../reports/approved', filename.replace('reviewed', 'approved'));
+  fs.renameSync(src, dest);
+  res.json({ message: `✅ Approved by ${username} and moved.` });
 });
 
 module.exports = router;

@@ -11,6 +11,7 @@ const approverAPI = require("./routes/approverapi");
 const reportRoutes = require("./routes/reportRoutes");
 const nodeReport = require("./routes/nodeReport");
 const reportGenerator = require('./routes/reportGenerator');
+const fileWorkflow = require("./routes/fileWorkflow");
 
 
 const app = express();
@@ -24,6 +25,7 @@ app.use('/reports/generated', express.static(path.join(__dirname, 'reports/gener
 app.use('/reports/reviewed', express.static(path.join(__dirname, 'reports/reviewed')));
 app.use('/reports/approved', express.static(path.join(__dirname, 'reports/approved')));
 app.use('/api', reportGenerator);
+app.use("/api", fileWorkflow);
 
 
 // Root route

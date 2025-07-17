@@ -1,56 +1,40 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const sql = require('mssql');
-const { poolPromise } = require('../db/alarmsdb');
+const fs = require("fs");
+const path = require("path");
 
-// GET /api/reports/review (Pending review reports)
-router.get('/review', async (req, res) => {
-  try {
-    const pool = await poolPromise;
-    const result = await pool.request().query(
-      "SELECT * FROM Reports WHERE status = 'Pending Review'"
-    );
-    res.json(result.recordset);
-  } catch (err) {
-    console.error('Error fetching review reports:', err);
-    res.status(500).json({ error: 'Failed to fetch review reports' });
-  }
+// 1️⃣ Show list of files in generated/
+router.get("/reports/review/files", (req, res) => {
+  const folderPath = path.join(__dirname, "../reports/generated");
+
+  fs.readdir(folderPath, (err, files) => {
+    if (err) return res.status(500).json({ message: "Error reading files" });
+
+    res.json(files); // filenames
+  });
 });
 
-// POST /api/reports/review (Sign as reviewer)
-router.post('/reports/review', async (req, res) => {
-  const { reportId, reviewerName } = req.body;
+// 2️⃣ Serve PDF preview
+router.get("/reports/review/file/:filename", (req, res) => {
+  const { filename } = req.params;
+  const filePath = path.join(__dirname, "../reports/generated", filename);
+  if (!fs.existsSync(filePath)) return res.status(404).json({ message: "File not found" });
 
-  try {
-    const pool = await poolPromise;
-    const result = await pool.request()
-      .input('id', sql.Int, reportId)
-      .query('SELECT filepath FROM Reports WHERE id = @id');
-
-    const oldPath = path.join(__dirname, '../reports/generated', result.recordset[0].filepath);
-    const newPath = path.join(__dirname, '../reports/reviewed', result.recordset[0].filepath);
-
-    fs.renameSync(oldPath, newPath);
-
-    await pool.request()
-      .input('id', sql.Int, reportId)
-      .input('reviewer', sql.VarChar, reviewerName)
-      .input('reviewer_signed_at', sql.DateTime, new Date())
-      .query(`
-        UPDATE Reports 
-        SET status = 'Reviewed', 
-            reviewer = @reviewer, 
-            reviewer_signed_at = @reviewer_signed_at,
-            reviewerSign = 1 
-        WHERE id = @id
-      `);
-
-    res.status(200).json({ message: 'Report reviewed and moved to reviewed folder' });
-  } catch (err) {
-    console.error('Reviewer error:', err);
-    res.status(500).json({ message: 'Error reviewing report' });
-  }
+  res.sendFile(filePath);
 });
 
+// 3️⃣ Sign (move) file to reviewed/
+router.post("/reports/review/sign", (req, res) => {
+  const { filename, reviewer } = req.body;
+  const oldPath = path.join(__dirname, "../reports/generated", filename);
+  const newPath = path.join(__dirname, "../reports/reviewed", filename);
+
+  if (!fs.existsSync(oldPath)) return res.status(404).json({ message: "Original file not found" });
+
+  fs.rename(oldPath, newPath, (err) => {
+    if (err) return res.status(500).json({ message: "Failed to sign report" });
+    res.json({ message: "Report reviewed and moved" });
+  });
+});
 
 module.exports = router;
