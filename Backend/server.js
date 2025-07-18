@@ -8,6 +8,7 @@ const assetCentreRoutes = require("./routes/assetcentre_api");
 const authorAPI = require("./routes/authorapi");
 const reviewerAPI = require("./routes/reviewerapi");
 const approverAPI = require("./routes/approverapi");
+const archivedAPI = require("./routes/archivedapi");
 const reportRoutes = require("./routes/reportRoutes");
 const nodeReport = require("./routes/nodeReport");
 const reportGenerator = require('./routes/reportGenerator');
@@ -24,6 +25,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/reports/generated', express.static(path.join(__dirname, 'reports/generated')));
 app.use('/reports/reviewed', express.static(path.join(__dirname, 'reports/reviewed')));
 app.use('/reports/approved', express.static(path.join(__dirname, 'reports/approved')));
+
+
 app.use('/api', reportGenerator);
 app.use("/api", fileWorkflow);
 
@@ -34,7 +37,7 @@ app.get("/", (req, res) => {
 });
 
 // API route groupings
-app.use("/api", authRoutes);
+app.use("/api", authRoutes.router);
 app.use("/api", alarmRoutes);
 app.use("/api", assetCentreRoutes);
 app.use("/api", reportRoutes);
@@ -44,6 +47,7 @@ app.use("/api", nodeReport);
 app.use("/api/reports", authorAPI);
 app.use("/api/reports", reviewerAPI);
 app.use("/api/reports", approverAPI);
+app.use("/api/reports", archivedAPI);
 
 // Start server
 app.listen(port, () => {

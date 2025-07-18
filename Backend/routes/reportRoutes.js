@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
-const { sql, poolPromise } = require("../db/alarmsdb"); // ✅ FIXED
+const { sql, poolPromise } = require("../db/alarmsdb");
 const httpntlm = require("httpntlm");
-const {checkRole} = require("../middleware/role");
+const { checkRole } = require("../middleware/role");
+const { verifyToken, authorizeRole } = require('../routes/auth');
 
-// Configuration constants
 const REPORT_SERVER_URL = "http://nitrov/ReportServer";
 const REPORT_PATH = "/Rockwell Project Report";
 const CREDENTIALS = {
@@ -15,7 +15,6 @@ const CREDENTIALS = {
   workstation: "NitroV"
 };
 
-// 🔧 Wrap httpntlm.get in a Promise
 function ntlmGetAsync(options) {
   return new Promise((resolve, reject) => {
     httpntlm.get(options, (err, res) => {
@@ -37,7 +36,6 @@ router.get("/generatefromreport", async (req, res) => {
     const timestamp = Date.now();
     const filePath = path.join(__dirname, "../reports/generated", `${cleanedName}_${timestamp}_generated.pdf`);
 
-    // 🧠 Include dynamic parameters if any
     const paramQueryString = Object.entries(params)
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join("&");
@@ -56,7 +54,7 @@ router.get("/generatefromreport", async (req, res) => {
 
     fs.writeFileSync(filePath, ntlmResponse.body);
 
-    const pool = await poolPromise; // ✅ FIXED
+    const pool = await poolPromise;
     await pool.request()
       .input("data", sql.VarChar, cleanedName)
       .input("author", sql.VarChar, username)
@@ -80,7 +78,6 @@ router.get('/files/reviewer', checkRole('Reviewer'), async (req, res) => {
   res.json({ files });
 });
 
-// ✅ REVIEWER signs and moves to reviewed
 router.post('/sign', checkRole('Reviewer'), async (req, res) => {
   const { filename, username } = req.body;
   const src = path.join(__dirname, '../reports/generated', filename);
@@ -89,14 +86,12 @@ router.post('/sign', checkRole('Reviewer'), async (req, res) => {
   res.json({ message: `✅ Signed by Reviewer ${username} and moved.` });
 });
 
-// ✅ APPROVER fetch reviewed files
 router.get('/files/approver', checkRole('Approver'), async (req, res) => {
   const dirPath = path.join(__dirname, '../reports/reviewed');
   const files = fs.readdirSync(dirPath);
   res.json({ files });
 });
 
-// ✅ APPROVER signs and moves to approved
 router.post('/approve', checkRole('Approver'), async (req, res) => {
   const { filename, username } = req.body;
   const src = path.join(__dirname, '../reports/reviewed', filename);
@@ -104,5 +99,7 @@ router.post('/approve', checkRole('Approver'), async (req, res) => {
   fs.renameSync(src, dest);
   res.json({ message: `✅ Approved by ${username} and moved.` });
 });
+
+// 🔥 Removed the /archived/files route to avoid duplication
 
 module.exports = router;

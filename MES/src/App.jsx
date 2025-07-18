@@ -16,6 +16,7 @@ import Approve from "./pages/Approve.jsx";
 import ProtectedRouteWithRole from "./components/ProtectedRouteWithRole";
 import Unauthorized from "./pages/Unauthorized.jsx";
 import AuthorReports from "./components/AuthorReports.jsx";
+import ArchivedDashboard from "./pages/ArchivedDashboard.jsx";
 
 
 class App extends Component {
@@ -91,6 +92,10 @@ class App extends Component {
                 <Approve />
               </ProtectedRouteWithRole>
             }
+          />
+          <Route
+            path="/archived"
+            element={<ProtectedRouteWithRole component={ArchivedDashboard} allowedRole="Approver" />}
           />
 
           <Route path="/unauthorized" element={<Unauthorized />} />

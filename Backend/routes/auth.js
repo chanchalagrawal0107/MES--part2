@@ -138,7 +138,37 @@ router.post('/resetpassword', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+// ✅ Middleware to verify JWT token
+function verifyToken(req, res, next) {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+  if (!token) return res.status(401).json({ message: 'No token provided' });
 
-module.exports = router;
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    console.error("❌ Invalid token", err.message);
+    return res.status(401).json({ message: 'Invalid token' });
+  }
+}
+
+// ✅ Middleware to authorize based on user role
+function authorizeRole(role) {
+  return (req, res, next) => {
+    if (req.user && req.user.role === role) {
+      next();
+    } else {
+      return res.status(403).json({ message: 'Forbidden: insufficient role' });
+    }
+  };
+}
+
+module.exports = {
+  router,
+  verifyToken,
+  authorizeRole
+};
+
 
 
