@@ -25,8 +25,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/reports/generated', express.static(path.join(__dirname, 'reports/generated')));
 app.use('/reports/reviewed', express.static(path.join(__dirname, 'reports/reviewed')));
 app.use('/reports/approved', express.static(path.join(__dirname, 'reports/approved')));
-
-
 app.use('/api', reportGenerator);
 app.use("/api", fileWorkflow);
 

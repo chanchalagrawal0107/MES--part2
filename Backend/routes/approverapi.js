@@ -28,7 +28,8 @@ router.get("/approve/file/:filename", checkRole("Approver"), (req, res) => {
 
 // 3️⃣ Approve and move to approved/
 router.post("/approve/sign", checkRole("Approver"), async (req, res) => {
-  const { filename, approver } = req.body;
+  const { filename } = req.body;
+  const approver = req.user?.username; // ✅ Get logged-in user's name
 
   const oldPath = path.join(__dirname, "../reports/reviewed", filename);
   const newPath = path.join(__dirname, "../reports/approved", filename);
@@ -41,28 +42,22 @@ router.post("/approve/sign", checkRole("Approver"), async (req, res) => {
     const existingPdfBytes = fs.readFileSync(oldPath);
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
     const pages = pdfDoc.getPages();
-    const lastPage = pages[pages.length - 1];
+    const approvalDate = new Date().toLocaleString();
+    const approvalLine = `Approved by: ${approver} on ${approvalDate}`;
 
-    const date = new Date().toLocaleString();
-
-    lastPage.drawText(`Approver: ${approver}`, {
-      x: 50,
-      y: 50,
-      size: 10,
-      color: rgb(0.5, 0, 0),
-    });
-
-    lastPage.drawText(`Approved on: ${date}`, {
-      x: 50,
-      y: 35,
-      size: 8,
-      color: rgb(0.3, 0.3, 0.3),
+    pages.forEach((page) => {
+      page.drawText(approvalLine, {
+        x: 30,
+        y: 25, // Adjust if overlapping with reviewed/generated
+        size: 8,
+        color: rgb(0.4, 0.4, 0.4),
+      });
     });
 
     const signedPdfBytes = await pdfDoc.save();
     fs.writeFileSync(newPath, signedPdfBytes);
 
-    fs.unlinkSync(oldPath);
+    fs.unlinkSync(oldPath); // delete from reviewed
     res.json({ message: "Report approved and moved" });
   } catch (error) {
     console.error("Error approving PDF:", error);
