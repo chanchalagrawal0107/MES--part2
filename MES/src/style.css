@@ -5,10 +5,12 @@
   align-items: center;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 20% 30%, #6b7b4c 0%, rgba(0, 0, 0, 0.267) 40%),
-    radial-gradient(circle at 80% 60%, #121c11 0%, rgba(0, 0, 0, 0.267) 45%),
-    radial-gradient(circle at 50% 90%, #6b7b4c 0%, rgba(0, 0, 0, 0.267) 50%),
-    radial-gradient(circle at 30% 20%, #121c11 0%, rgba(0, 0, 0, 0.267) 50%);
+    radial-gradient(circle at 52% 52%, #a40202 0%, rgba(0, 0, 0, 0.267) 40%),
+    radial-gradient(circle at 1% 100%, #000000 0%, rgba(0, 0, 0, 0.267) 40%),
+    radial-gradient(circle at 80% 60%, #1c1111 0%, rgba(0, 0, 0, 0.267) 80%),
+    radial-gradient(circle at 40% 40%, #ff0000 0%, rgba(0, 0, 0, 0.267) 60%),
+    radial-gradient(circle at 30% 20%, #000000 0%, rgba(0, 0, 0, 0.267) 70%),
+    radial-gradient(circle at 30% 30%, #000000 0%, rgba(0, 0, 0, 0.267) 70%);
 }
 
 /* Common form container */
@@ -68,7 +70,7 @@
 }
 
 .login-button:hover {
-  background-color: #6b7b4c;
+  background-color: #6d0101;
   transform: scale(1.05);
   color: white;
 }
@@ -94,45 +96,181 @@
   text-decoration: underline;
   font-weight: bold;
 }
-/* Dashboard container with spacing between cards */
-.dashboard-container {
+
+.dashboard-container{
   display: flex;
   gap: 20px;
   padding: 20px;
+  flex-wrap: wrap;
 }
 
-/* Dashboard card styling */
-.dashboard-card {
-  width: 20rem;
-  height: 5rem;
+.dashboard-card{
+  width: 18rem;
   cursor: pointer;
-  text-align: center;
-  padding: 13px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  transition: transform 0.3s, box-shadow 0.3s;
   background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
+
 
 .dashboard-card:hover {
   transform: scale(1.03);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
-.content-container {
+/* Inside Card Styling (inherits default bootstrap if used) */
+.card-body {
   padding: 20px;
 }
 
-.report-box {
-  background: #f7f7f7;
-  border: 1px solid #ddd;
-  padding: 20px;
-  margin: 20px auto;
-  max-width: 600px;
-  border-radius: 10px;
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
-.button-container {
-  margin-top: 20px;
+.card-text {
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.custom-navbar {
+  background-color: #111;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.sidebar-toggle-btn {
+  background: none;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.logout-link {
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s;
+  margin-left: auto;
+}
+
+.logout-link:hover {
+  color: #ff4c4c;
+}
+
+/* ====== Sidebar Styles ====== */
+.custom-sidebar {
+  background-color: #1f1f1f !important;
+  color: white;
+  width: 250px;
+}
+
+.sidebar-header {
+  padding: 16px;
+  border-bottom: 1px solid #444;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: white;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+.sidebar-body {
+  padding: 16px;
+}
+
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 10px 0;
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.sidebar-link:hover {
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Reusable utility classes */
+.btn-outline-light {
+  border: 1px solid #fff;
+  size: 10rem;
+  color: #fff;
+  background-color: transparent;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-outline-light:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.navbar-dark {
+  background-color: #111;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.container-fluid {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #000;
+  cursor: pointer;
+}
+
+.nav-a {
+  display: block;
+  padding: 10px 0;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-a:hover {
+  color: #000;
+  font-weight: bold;
 }
