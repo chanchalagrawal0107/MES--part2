@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 
 class ApproverDashboard extends Component {
   state = { files: [] };
@@ -36,6 +37,8 @@ class ApproverDashboard extends Component {
 
   render() {
     return (
+      <>
+      <Navbar/>
       <div className="container mt-5">
         <h3>Approver Dashboard</h3>
         {this.state.files.map(file => (
@@ -56,6 +59,7 @@ class ApproverDashboard extends Component {
           </div>
         ))}
       </div>
+      </>
     );
   }
 }

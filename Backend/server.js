@@ -45,7 +45,7 @@ app.use("/api", nodeReport);
 app.use("/api/reports", authorAPI);
 app.use("/api/reports", reviewerAPI);
 app.use("/api/reports", approverAPI);
-app.use("/api/reports", archivedAPI);
+app.use("/api/archived", archivedAPI);
 
 // Start server
 app.listen(port, () => {

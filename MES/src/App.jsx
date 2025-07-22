@@ -95,7 +95,10 @@ class App extends Component {
           />
           <Route
             path="/archived"
-            element={<ProtectedRouteWithRole component={ArchivedDashboard} allowedRole="Approver" />}
+            element={<ProtectedRouteWithRole allowedRole="Approver">
+              <ArchivedDashboard/>
+              </ProtectedRouteWithRole>
+              }
           />
 
           <Route path="/unauthorized" element={<Unauthorized />} />
