@@ -103,3 +103,4 @@ router.post('/approve', checkRole('Approver'), async (req, res) => {
 // 🔥 Removed the /archived/files route to avoid duplication
 
 module.exports = router;
+
