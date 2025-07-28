@@ -6,10 +6,7 @@ class AuthorCards extends Component {
   };
 
   handleAuditReport = () => {
-    window.open(
-      "http://nitrov/ReportServer/Pages/ReportViewer.aspx?%2fRockwell+Project+Report%2fAsset+Centre+Report&rs:Command=Render",
-      "_blank"
-    );
+   window.location.href = "/audit/reports";
   };
 
   render() {

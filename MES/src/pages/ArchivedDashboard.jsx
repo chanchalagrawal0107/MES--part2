@@ -1,10 +1,10 @@
-// pages/ArchivedDashboard.jsx
 import React, { Component } from "react";
 import axios from "axios";
 
 class ArchivedDashboard extends Component {
   state = {
-    files: []
+    files: [],
+    selectedFile: null,
   };
 
   componentDidMount() {
@@ -16,18 +16,14 @@ class ArchivedDashboard extends Component {
       return;
     }
 
-    console.log("📦 ArchivedDashboard mounted");
     this.fetchFiles();
   }
 
   fetchFiles = async () => {
     try {
-      console.log("📤 Fetching archived files...");
       const res = await axios.get("http://localhost:5000/api/archived/files", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` }
+        headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
       });
-
-      console.log("✅ Archived files fetched:", res.data);
       this.setState({ files: res.data });
     } catch (error) {
       console.error("❌ Error loading archived files:", error);
@@ -35,31 +31,63 @@ class ArchivedDashboard extends Component {
     }
   };
 
+  handleFileClick = (file) => {
+    this.setState({ selectedFile: file });
+  };
+
   render() {
-    const { files } = this.state;
+    const { files, selectedFile } = this.state;
 
     return (
       <div className="container mt-5">
-        <h3>📁 Archived Reports</h3>
-        {files.length === 0 ? (
-          <p>No archived reports found.</p>
-        ) : (
-          files.map((file) => (
-            <div className="card mb-3" key={file}>
-              <div className="card-header">
-                <strong>{file}</strong>
-              </div>
-              <div className="card-body">
-                <iframe
-                  src={`http://localhost:5000/reports/approved/${file}`}
-                  width="100%"
-                  height="500px"
-                  title={file}
-                  frameBorder="0"
-                />
+        <h1 className="text-center text-dark mb-5 display-5 fw-bold border-bottom pb-2">
+          📁 Archived Reports
+        </h1>
+
+        {/* Grid of Archived Files */}
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+          {files.map((file) => (
+            <div className="col" key={file}>
+              <div className="card h-100 border border-info shadow-sm">
+                <div className="card-body d-flex flex-column">
+                  <h6 className="card-title text-primary fw-semibold text-truncate">
+                    🧾 {file}
+                  </h6>
+                  <button
+                    className="btn btn-outline-info mt-auto fw-medium"
+                    onClick={() => this.handleFileClick(file)}
+                    style={{ backgroundColor: "#17a2b8", color: "white", border: "none" }}
+                  >
+                    Preview Report
+                  </button>
+                </div>
               </div>
             </div>
-          ))
+          ))}
+        </div>
+
+        {/* Preview Section */}
+        {selectedFile && (
+          <div className="card mt-5 shadow border border-dark">
+            <div className="card-header bg-info text-white d-flex justify-content-between align-items-center">
+              <h5 className="mb-0">📄 Previewing: {selectedFile}</h5>
+              <button
+                className="btn btn-sm btn-outline-light"
+                onClick={() => this.setState({ selectedFile: null })}
+              >
+                ❌ Close Preview
+              </button>
+            </div>
+            <div className="card-body p-0 bg-light">
+              <iframe
+                src={`http://localhost:5000/reports/approved/${selectedFile}`}
+                width="100%"
+                height="600px"
+                title={selectedFile}
+                style={{ border: "none" }}
+              ></iframe>
+            </div>
+          </div>
         )}
       </div>
     );

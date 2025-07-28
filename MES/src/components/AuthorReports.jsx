@@ -36,7 +36,7 @@ class AuthorReports extends Component {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/reports/preview?start_date=${startDate}&end_date=${endDate}`
+        `http://localhost:5000/api/reports/preview?start_date=${startDate}&end_date=${endDate}&source=alarms`
       );
       const data = await res.json();
       this.setState({ previewData: data || [] });
@@ -46,32 +46,69 @@ class AuthorReports extends Component {
     }
   };
 
+  // handleGenerateReport = async () => {
+  //   const { startDate, endDate } = this.state;
+  //   const username = localStorage.getItem("username");
+
+  //   if (!startDate || !endDate) {
+  //     alert("Please select both start and end dates.");
+  //     return;
+  //   }
+
+  //   try {
+  //     const res = await fetch("http://localhost:5000/api/reports/generate", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ startDate, endDate, username }),
+  //     });
+
+  //     const result = await res.json();
+  //     if (res.ok) alert(result.message);
+  //     else alert("Error: " + result.message);
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("Error generating report");
+  //   }
+  // };
+
   handleGenerateReport = async () => {
-    const { startDate, endDate } = this.state;
-    const username = localStorage.getItem("username");
+  const { startDate, endDate } = this.state;
+  const username = localStorage.getItem("username") || 'unknown_user';
 
-    if (!startDate || !endDate) {
-      alert("Please select both start and end dates.");
-      return;
+  if (!startDate || !endDate) {
+    alert("Please select both start and end dates.");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:5000/api/reports/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+      },
+      body: JSON.stringify({
+        startDate: startDate,  // or start_date if backend expects that
+        endDate: endDate,      // or end_date if backend expects that
+        username: username,
+        source: "alarms"       // Add this crucial parameter
+      }),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || 'Failed to generate report');
     }
 
-    try {
-      const res = await fetch("http://localhost:5000/api/reports/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ startDate, endDate, username }),
-      });
-
-      const result = await res.json();
-      if (res.ok) alert(result.message);
-      else alert("Error: " + result.message);
-    } catch (err) {
-      console.error(err);
-      alert("Error generating report");
-    }
-  };
+    const result = await res.json();
+    alert(result.message);
+  } catch (err) {
+    console.error("Error generating report:", err);
+    alert(err.message || "Error generating report");
+  }
+};
 
   handlePrint = () => {
     window.print();
@@ -82,7 +119,7 @@ class AuthorReports extends Component {
 
     return (
       <div className="container mt-5">
-        <h3 className="mb-4">Author Report Generator</h3>
+        <h3 className="mb-4">Alarms Report Generator</h3>
 
         <div className="row align-items-center mb-3">
   <div className="col-md-2">
@@ -160,3 +197,4 @@ class AuthorReports extends Component {
 }
 
 export default AuthorReports;
+

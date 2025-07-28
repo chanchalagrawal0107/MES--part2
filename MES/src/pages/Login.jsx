@@ -40,6 +40,7 @@ class Login extends Component {
         if (data.token) {
           localStorage.setItem('authToken', data.token);
           localStorage.setItem('userRole', role);
+          localStorage.setItem('username', username);
         }
 
         this.props.onLogin(username, password, role);

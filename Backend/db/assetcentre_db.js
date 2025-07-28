@@ -22,20 +22,9 @@ const poolPromise = new sql.ConnectionPool(config)
   })
   .catch(err => console.log('Database connection failed:', err));
 
-  
-// async function connectToDb() {
-//   try {
-//     const pool = await new sql.ConnectionPool(config).connect();
-//     console.log('MSSQL Connected successfully');
-//     return pool;
-//   } catch (err) {
-//     console.error('MSSQL Connection Failed:', err.message);
-//     throw err;
-//   }
-// }
-// poolPromise = connectToDb();
-
 module.exports = {
   sql,
   poolPromise,
 };
+
+

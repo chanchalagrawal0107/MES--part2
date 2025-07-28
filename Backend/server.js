@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-
+const fs = require("fs");
 const alarmRoutes = require("./routes/alarmsapi");
 const authRoutes = require("./routes/auth");
 const assetCentreRoutes = require("./routes/assetcentre_api");
@@ -20,6 +20,8 @@ const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use("/api", nodeReport);
+
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/reports/generated', express.static(path.join(__dirname, 'reports/generated')));
@@ -39,7 +41,6 @@ app.use("/api", authRoutes.router);
 app.use("/api", alarmRoutes);
 app.use("/api", assetCentreRoutes);
 app.use("/api", reportRoutes);
-app.use("/api", nodeReport);
 
 // Report workflow routes (author, reviewer, approver)
 app.use("/api/reports", authorAPI);

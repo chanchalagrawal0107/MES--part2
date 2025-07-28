@@ -17,6 +17,7 @@ import ProtectedRouteWithRole from "./components/ProtectedRouteWithRole";
 import Unauthorized from "./pages/Unauthorized.jsx";
 import AuthorReports from "./components/AuthorReports.jsx";
 import ArchivedDashboard from "./pages/ArchivedDashboard.jsx";
+import AuditReports from "./components/AuditReports.jsx";
 
 
 class App extends Component {
@@ -30,6 +31,7 @@ class App extends Component {
   handleLogin = (username, password, role) => {
     this.setState({ isAuthenticated: true });
     localStorage.setItem("userRole", role);
+    localStorage.setItem("username", username);
   };
 
   handleLogout = () => {
@@ -74,6 +76,7 @@ class App extends Component {
             }
           />
           <Route path="/author/reports" element={<AuthorReports />} />
+          <Route path="/audit/reports" element={<AuditReports />} />
           <Route path="/register" element={<this.RegisterWithNavigate />} />
           <Route path="/reset" element={<this.ResetWithNavigate />} />
           <Route

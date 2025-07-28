@@ -4,6 +4,7 @@ import axios from "axios";
 class ReviewerDashboard extends Component {
   state = {
     files: [],
+    selectedFile: null,
   };
 
   componentDidMount() {
@@ -23,14 +24,19 @@ class ReviewerDashboard extends Component {
     }
   };
 
-  handleSign = async (file) => {
+  handleFileClick = (file) => {
+    this.setState({ selectedFile: file });
+  };
+
+  handleSign = async () => {
+    const { selectedFile } = this.state;
+    if (!selectedFile) return;
+
     try {
       const res = await axios.post(
         "http://localhost:5000/api/reports/review/sign",
         {
-          filename: file,
-          // role: "reviewer",
-          // username: localStorage.getItem("username")
+          filename: selectedFile,
           reviewer: localStorage.getItem("username"),
         },
         {
@@ -40,34 +46,59 @@ class ReviewerDashboard extends Component {
         }
       );
       alert(res.data.message);
-      this.fetchFiles();
+      this.setState({ selectedFile: null });
+      this.fetchFiles(); // Refresh file list
     } catch (err) {
-      alert("Error signing file",err);
+      alert("Error signing file", err);
     }
   };
 
   render() {
+    const { files, selectedFile } = this.state;
+
     return (
       <div className="container mt-5">
-        <h3>Reviewer Dashboard</h3>
-        {this.state.files.map((file) => (
-          <div className="card mb-4" key={file}>
-            <div className="card-header d-flex justify-content-between">
-              <span>{file}</span>
-              <button className="btn btn-sm btn-success" onClick={() => this.handleSign(file)}>
-                Sign & Move to Reviewed
+        <h2 className="text-center mb-4 display-6"><b>Reviewer Dashboard</b></h2>
+
+        {/* Report File Grid */}
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+          {files.map((file) => (
+            <div className="col" key={file}>
+              <div className="card shadow-sm h-100 border-0">
+                <div className="card-body d-flex flex-column">
+                  <h6 className="card-title text-truncate">{file}</h6>
+                  <button
+                    className="btn btn-outline-primary mt-auto"
+                    onClick={() => this.handleFileClick(file)}
+                  >
+                    Preview Report
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Preview Section */}
+        {selectedFile && (
+          <div className="card mt-5 shadow">
+            <div className="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+              <h5 className="mb-0">Previewing: {selectedFile}</h5>
+              <button className="btn btn-light" onClick={this.handleSign}>
+                ✅ Sign 
               </button>
             </div>
-            <div className="card-body">
+            <div className="card-body p-0">
               <iframe
-                src={`http://localhost:5000/reports/generated/${file}`}
+                src={`http://localhost:5000/reports/generated/${selectedFile}`}
                 width="100%"
-                height="500px"
-                title={file}
+                height="600px"
+                title={selectedFile}
+                style={{ border: "none" }}
               ></iframe>
             </div>
           </div>
-        ))}
+        )}
       </div>
     );
   }
