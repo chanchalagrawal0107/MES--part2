@@ -5,6 +5,7 @@ class ArchivedDashboard extends Component {
   state = {
     files: [],
     selectedFile: null,
+    filter: "all",
   };
 
   componentDidMount() {
@@ -35,18 +36,47 @@ class ArchivedDashboard extends Component {
     this.setState({ selectedFile: file });
   };
 
+  handleFilterChange = (e) => {
+    this.setState({ filter: e.target.value });
+  };
+
+  getFilteredFiles = () => {
+    const { files, filter } = this.state;
+    if (filter === "all") return files;
+    return files.filter((file) =>
+      filter === "alarms"
+        ? file.toLowerCase().startsWith("alarms")
+        : file.toLowerCase().startsWith("assetcentre")
+    );
+  };
+
   render() {
-    const { files, selectedFile } = this.state;
+    const { selectedFile, filter } = this.state;
+    const filteredFiles = this.getFilteredFiles();
 
     return (
       <div className="container mt-5">
-        <h1 className="text-center text-dark mb-5 display-5 fw-bold border-bottom pb-2">
+        <h1 className="text-center text-dark mb-4 display-5 fw-bold border-bottom pb-2">
           📁 Archived Reports
         </h1>
 
+        {/* Filter Dropdown */}
+        <div className="mb-4">
+          <label className="form-label"><b>Filter by Report Type:</b></label>
+          <select
+            className="form-select"
+            value={filter}
+            onChange={this.handleFilterChange}
+          >
+            <option value="all">All Reports</option>
+            <option value="alarms">Alarms Reports</option>
+            <option value="assetcentre">Asset Centre Reports</option>
+          </select>
+        </div>
+
         {/* Grid of Archived Files */}
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-          {files.map((file) => (
+          {filteredFiles.map((file) => (
             <div className="col" key={file}>
               <div className="card h-100 border border-info shadow-sm">
                 <div className="card-body d-flex flex-column">

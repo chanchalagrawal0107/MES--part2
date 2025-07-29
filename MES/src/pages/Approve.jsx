@@ -6,6 +6,7 @@ class ApproverDashboard extends Component {
   state = {
     files: [],
     selectedFile: null,
+    filter: "all",
   };
 
   componentDidMount() {
@@ -39,7 +40,7 @@ class ApproverDashboard extends Component {
         "http://localhost:5000/api/reports/approve/sign",
         {
           filename: selectedFile,
-          role: "approver", // optional if needed in backend
+          role: "approver",
         },
         {
           headers: {
@@ -56,8 +57,23 @@ class ApproverDashboard extends Component {
     }
   };
 
+  handleFilterChange = (event) => {
+    this.setState({ filter: event.target.value });
+  };
+
+  getFilteredFiles = () => {
+    const { files, filter } = this.state;
+    if (filter === "all") return files;
+    return files.filter((file) =>
+      filter === "alarms"
+        ? file.toLowerCase().startsWith("alarms")
+        : file.toLowerCase().startsWith("assetcentre")
+    );
+  };
+
   render() {
-    const { files, selectedFile } = this.state;
+    const { selectedFile, filter } = this.state;
+    const filteredFiles = this.getFilteredFiles();
 
     return (
       <>
@@ -65,9 +81,23 @@ class ApproverDashboard extends Component {
         <div className="container mt-5">
           <h1 className="text-center mb-4 display-6"><b>Approver Dashboard</b></h1>
 
+          {/* Filter Dropdown */}
+          <div className="mb-4">
+            <label className="form-label"><b>Filter by Report Type:</b></label>
+            <select
+              className="form-select"
+              value={filter}
+              onChange={this.handleFilterChange}
+            >
+              <option value="all">All Reports</option>
+              <option value="alarms">Alarms Reports</option>
+              <option value="assetcentre">Asset Centre Reports</option>
+            </select>
+          </div>
+
           {/* Grid of Report Cards */}
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-            {files.map((file) => (
+            {filteredFiles.map((file) => (
               <div className="col" key={file}>
                 <div className="card shadow-sm h-100 border-0">
                   <div className="card-body d-flex flex-column">
@@ -90,7 +120,7 @@ class ApproverDashboard extends Component {
               <div className="card-header d-flex justify-content-between align-items-center bg-success text-white">
                 <h5 className="mb-0">Previewing: {selectedFile}</h5>
                 <button className="btn btn-light" onClick={this.handleApprove}>
-                  ✅ Approve 
+                  ✅ Approve
                 </button>
               </div>
               <div className="card-body p-0">
