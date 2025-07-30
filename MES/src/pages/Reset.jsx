@@ -47,27 +47,30 @@ class Reset extends Component {
 
   render() {
     return (
-      <div className="bg">
-        <div className="login-panel">
-          <h2 className="h2">Reset Password</h2>
-
-          <form onSubmit={this.handleSubmit}>
-            <div className="username">
-              <label htmlFor="username" className="form-label"><b>Username</b></label>
+      <div className="auth-bg">
+        <div className="auth-container">
+          <div className="auth-header">
+            <h1 className="auth-title">Reset Password</h1>
+            <p className="auth-subtitle">Enter your details to reset password</p>
+          </div>
+          
+          <form onSubmit={this.handleSubmit} className="auth-form">
+            <div className="form-group">
+              <label htmlFor="username" className="form-label">Username</label>
               <input
                 type="text"
                 id="username"
                 name="username"
                 className="form-control"
-                placeholder="Enter username"
+                placeholder="Enter your username"
                 value={this.state.username}
                 onChange={this.handleChange}
                 required
               />
             </div>
 
-            <div className="password">
-              <label htmlFor="password" className="form-label"><b>New Password</b></label>
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">New Password</label>
               <input
                 type="password"
                 id="password"
@@ -80,13 +83,18 @@ class Reset extends Component {
               />
             </div>
 
-            <button type="submit" className="login-button">
+            <button type="submit" className="auth-btn">
               Reset Password
             </button>
 
-            <p className="text-center">
-              New User? <a href="/register" className="register">Register</a>
-            </p>
+            <div className="auth-footer">
+              <p>
+                Remember your password? <a href="/" className="auth-link">Login</a>
+              </p>
+              <p>
+                New User? <a href="/register" className="auth-link">Register</a>
+              </p>
+            </div>
           </form>
         </div>
       </div>

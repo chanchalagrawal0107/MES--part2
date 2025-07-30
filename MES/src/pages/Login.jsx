@@ -55,78 +55,71 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="bg">
-        <div className="login-panel">
-          <h2 className="h2">Login</h2>
-          <form onSubmit={this.handleSubmit}>
-            <div className="username">
-              <label htmlFor="username" className="form-label">
-                Username
-              </label>
+      <div className="auth-container">
+        <div className="auth-card">
+          <div className="auth-header">
+            <h1 className="auth-title">Login</h1>
+            <p className="auth-subtitle">Access your manufacturing system</p>
+          </div>
+          
+          <form onSubmit={this.handleSubmit} className="auth-form">
+            <div className="form-group">
+              <label htmlFor="username" className="form-label">Username</label>
               <input
                 type="text"
                 id="username"
                 name="username"
                 className="form-control"
-                placeholder="Enter username"
+                placeholder="Enter your username"
                 value={this.state.username}
                 onChange={this.handleChange}
                 required
               />
             </div>
 
-            <div className="password">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">Password</label>
               <input
                 type="password"
                 id="password"
                 name="password"
                 className="form-control"
-                placeholder="Enter password"
+                placeholder="Enter your password"
                 value={this.state.password}
                 onChange={this.handleChange}
                 required
               />
             </div>
 
-            <div className="role">
-              <label htmlFor="role" className="form-label">
-                <b>Role</b>
-              </label>
+            <div className="form-group">
+              <label htmlFor="role" className="form-label">Role</label>
               <select
                 id="role"
                 name="role"
-                className="form-control"
+                className="form-control role-select"
                 value={this.state.role}
                 onChange={this.handleChange}
                 required
               >
-                <option value="" disabled>
-                  Select Role
-                </option>
+                <option value="" disabled>Select your role</option>
                 <option value="Author">Author</option>
                 <option value="Reviewer">Reviewer</option>
                 <option value="Approver">Approver</option>
               </select>
             </div>
 
-            <button type="submit" className="login-button">
+            <button type="submit" className="auth-btn">
               Login
             </button>
 
-            <p className="text-center">
-              New User?{" "}
-              <a href="/register" className="register">
-                Register
-              </a>
-            </p>
-            <p className="text-center">
-              <a href="/reset" className="reset">
-                Forgot Password?
-              </a>
-            </p>
+            <div className="auth-footer">
+              <p>
+                New User? <a href="/register" className="auth-link">Register</a>
+              </p>
+              <p>
+                <a href="/reset" className="auth-link">Forgot Password?</a>
+              </p>
+            </div>
           </form>
         </div>
       </div>

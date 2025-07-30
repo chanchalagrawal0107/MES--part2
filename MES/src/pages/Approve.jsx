@@ -6,6 +6,7 @@ class ApproverDashboard extends Component {
   state = {
     files: [],
     selectedFile: null,
+    filter: "all",
   };
 
   componentDidMount() {
@@ -39,7 +40,7 @@ class ApproverDashboard extends Component {
         "http://localhost:5000/api/reports/approve/sign",
         {
           filename: selectedFile,
-          role: "approver", // optional if needed in backend
+          role: "approver",
         },
         {
           headers: {
@@ -56,50 +57,75 @@ class ApproverDashboard extends Component {
     }
   };
 
+  handleFilterChange = (event) => {
+    this.setState({ filter: event.target.value });
+  };
+
+  getFilteredFiles = () => {
+    const { files, filter } = this.state;
+    if (filter === "all") return files;
+    return files.filter((file) =>
+      filter === "alarms"
+        ? file.toLowerCase().startsWith("alarms")
+        : file.toLowerCase().startsWith("assetcentre")
+    );
+  };
+
   render() {
-    const { files, selectedFile } = this.state;
+    const { selectedFile, filter } = this.state;
+    const filteredFiles = this.getFilteredFiles();
 
     return (
       <>
         <Navbar />
-        <div className="container mt-5">
-          <h1 className="text-center mb-4 display-6"><b>Approver Dashboard</b></h1>
+        <div className="container">
+          <h2 className="dashboard-heading">Approver Dashboard</h2>
 
-          {/* Grid of Report Cards */}
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-            {files.map((file) => (
-              <div className="col" key={file}>
-                <div className="card shadow-sm h-100 border-0">
-                  <div className="card-body d-flex flex-column">
-                    <h6 className="card-title text-truncate">{file}</h6>
-                    <button
-                      className="btn btn-outline-success mt-auto"
-                      onClick={() => this.handleFileClick(file)}
-                    >
-                      Preview Report
-                    </button>
-                  </div>
+          <div className="report-filter">
+            <label className="form-label-custom">Filter by Report Type:</label>
+            <select
+              className="form-control-custom"
+              value={filter}
+              onChange={this.handleFilterChange}
+            >
+              <option value="all">All Reports</option>
+              <option value="alarms">Alarms Reports</option>
+              <option value="assetcentre">Asset Centre Reports</option>
+            </select>
+          </div>
+
+          <div className="report-card-grid">
+            {filteredFiles.map((file) => (
+              <div className="card-custom fade-in" key={file}>
+                <div className="card-body-custom">
+                  <h6 className="card-title text-truncate mb-3">{file}</h6>
+                  <button
+                    className="btn-custom btn-outline-custom"
+                    onClick={() => this.handleFileClick(file)}
+                  >
+                    Preview Report
+                  </button>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* PDF Preview Section */}
           {selectedFile && (
-            <div className="card mt-5 shadow">
-              <div className="card-header d-flex justify-content-between align-items-center bg-success text-white">
+            <div className="preview-container fade-in">
+              <div className="preview-header">
                 <h5 className="mb-0">Previewing: {selectedFile}</h5>
-                <button className="btn btn-light" onClick={this.handleApprove}>
-                  ✅ Approve 
+                <button 
+                  className="btn-custom btn-primary-custom"
+                  onClick={this.handleApprove}
+                >
+                  ✅ Approve Report
                 </button>
               </div>
-              <div className="card-body p-0">
+              <div className="p-0">
                 <iframe
                   src={`http://localhost:5000/reports/reviewed/${selectedFile}`}
-                  width="100%"
-                  height="600px"
+                  className="report-iframe"
                   title={selectedFile}
-                  style={{ border: "none" }}
                 ></iframe>
               </div>
             </div>

@@ -10,8 +10,6 @@ class AuthorReports extends Component {
     };
 
     this.displayColumns = [
-      // "EventID",
-      // "EventType",
       "SourceName",
       "ServerName",
       "EventTimeStamp",
@@ -46,123 +44,86 @@ class AuthorReports extends Component {
     }
   };
 
-  // handleGenerateReport = async () => {
-  //   const { startDate, endDate } = this.state;
-  //   const username = localStorage.getItem("username");
-
-  //   if (!startDate || !endDate) {
-  //     alert("Please select both start and end dates.");
-  //     return;
-  //   }
-
-  //   try {
-  //     const res = await fetch("http://localhost:5000/api/reports/generate", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ startDate, endDate, username }),
-  //     });
-
-  //     const result = await res.json();
-  //     if (res.ok) alert(result.message);
-  //     else alert("Error: " + result.message);
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert("Error generating report");
-  //   }
-  // };
-
   handleGenerateReport = async () => {
-  const { startDate, endDate } = this.state;
-  const username = localStorage.getItem("username") || 'unknown_user';
+    const { startDate, endDate } = this.state;
+    const username = localStorage.getItem("username") || "unknown_user";
 
-  if (!startDate || !endDate) {
-    alert("Please select both start and end dates.");
-    return;
-  }
-
-  try {
-    const res = await fetch("http://localhost:5000/api/reports/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem('authToken')}`
-      },
-      body: JSON.stringify({
-        startDate: startDate,  // or start_date if backend expects that
-        endDate: endDate,      // or end_date if backend expects that
-        username: username,
-        source: "alarms"       // Add this crucial parameter
-      }),
-    });
-
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.message || 'Failed to generate report');
+    if (!startDate || !endDate) {
+      alert("Please select both start and end dates.");
+      return;
     }
 
-    const result = await res.json();
-    alert(result.message);
-  } catch (err) {
-    console.error("Error generating report:", err);
-    alert(err.message || "Error generating report");
-  }
-};
+    try {
+      const res = await fetch("http://localhost:5000/api/reports/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+        body: JSON.stringify({
+          startDate,
+          endDate,
+          username,
+          source: "alarms",
+        }),
+      });
 
-  handlePrint = () => {
-    window.print();
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to generate report");
+      }
+
+      const result = await res.json();
+      alert(result.message);
+    } catch (err) {
+      console.error("Error generating report:", err);
+      alert(err.message || "Error generating report");
+    }
   };
 
   render() {
     const { startDate, endDate, previewData } = this.state;
 
     return (
-      <div className="container mt-5">
-        <h3 className="mb-4">Alarms Report Generator</h3>
+      <div className="audit-reports-container">
+        <h2 className="audit-reports-heading">Alarms Report Generator</h2>
 
-        <div className="row align-items-center mb-3">
-  <div className="col-md-2">
-    <label>Start Date</label>
-    <input
-      type="date"
-      className="form-control"
-      name="startDate"
-      value={startDate}
-      onChange={this.handleFilterChange}
-    />
-  </div>
+        <div className="audit-filters">
+          <div className="filter-group">
+            <label>Start Date</label>
+            <input
+              type="date"
+              name="startDate"
+              value={startDate}
+              onChange={this.handleFilterChange}
+            />
+          </div>
 
-  <div className="col-md-2">
-    <label>End Date</label>
-    <input
-      type="date"
-      className="form-control"
-      name="endDate"
-      value={endDate}
-      onChange={this.handleFilterChange}
-    />
-  </div>
+          <div className="filter-group">
+            <label>End Date</label>
+            <input
+              type="date"
+              name="endDate"
+              value={endDate}
+              onChange={this.handleFilterChange}
+            />
+          </div>
 
-  <div className="col-md-8 d-flex justify-content-end gap-2">
-    <button className="btn btn-info" onClick={this.fetchPreview}>
-      Preview Report
-    </button>
-    {/* {previewData.length > 0 && (
-      <button className="btn btn-info" onClick={this.handlePrint}>
-        🖨️ Print Report
-      </button>
-    )} */}
-    
-  </div>
-</div>
-
+          <div className="audit-action-buttons">
+            <button
+              className="btn-audit btn-preview"
+              onClick={this.fetchPreview}
+            >
+              Preview Report
+            </button>
+          </div>
+        </div>
 
         {previewData.length > 0 && (
           <>
-            <div className="table-responsive">
-              <table className="table table-bordered table-hover">
-                <thead className="table-light">
+            <div className="audit-table-container">
+              <table className="audit-table">
+                <thead>
                   <tr>
                     {this.displayColumns.map((key, idx) => (
                       <th key={idx}>{key}</th>
@@ -181,9 +142,9 @@ class AuthorReports extends Component {
               </table>
             </div>
 
-            <div className="text-center">
+            <div className="audit-action-buttons" style={{ marginTop: "2rem" }}>
               <button
-                className="btn btn-primary mt-3"
+                className="btn-audit btn-generate"
                 onClick={this.handleGenerateReport}
               >
                 Generate PDF Report
@@ -197,4 +158,3 @@ class AuthorReports extends Component {
 }
 
 export default AuthorReports;
-

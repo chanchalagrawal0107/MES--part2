@@ -46,50 +46,9 @@ class AuditReports extends Component {
     }
   };
 
-//   handleGenerateReport_Audit = async () => {
-//     const { startDate, endDate } = this.state;
-//     const username = localStorage.getItem("username") || 'unknown_user';
-//     if (!username) {
-//       alert("User not logged in. Please log in again.");
-//       return;
-//     }
-
-//     if (!startDate || !endDate) {
-//       alert("Please select both start and end dates.");
-//       return;
-//     }
-
-//     try {
-//       const res = await fetch("http://localhost:5000/api/reports/generate", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           startDate,
-//           endDate,
-//           username,
-//           source: "assetcentre" // Make sure this matches what the backend expects
-//         }),
-//       });
-
-//       const result = await res.json();
-//       if (res.ok) {
-//         alert(result.message);
-//       } else {
-//         alert("Error: " + result.message);
-//       }
-//     } catch (err) {
-//       console.error("Error generating report:", err);
-//       alert("Error generating report. Check console for details.");
-//     }
-//   };
-
-    // In AuditReports.jsx, modify the handleGenerateReport_Audit function:
 handleGenerateReport_Audit = async () => {
   const { startDate, endDate } = this.state;
-  const username = localStorage.getItem("username") || 'unknown_user'; // Provide a fallback
-
+  const username = localStorage.getItem("username") || 'unknown_user'; 
   if (!startDate || !endDate) {
     alert("Please select both start and end dates.");
     return;
@@ -125,34 +84,35 @@ handleGenerateReport_Audit = async () => {
     const { startDate, endDate, previewData } = this.state;
 
     return (
-      <div className="container mt-5">
-        <h3 className="mb-4">Audit Report Generator</h3>
+      <div className="audit-reports-container">
+        <h2 className="audit-reports-heading">Audit Report Generator</h2>
 
-        <div className="row align-items-center mb-3">
-          <div className="col-md-2">
+        <div className="audit-filters">
+          <div className="filter-group">
             <label>Start Date</label>
             <input
               type="date"
-              className="form-control"
               name="startDate"
               value={startDate}
               onChange={this.handleFilterChange}
             />
           </div>
 
-          <div className="col-md-2">
+          <div className="filter-group">
             <label>End Date</label>
             <input
               type="date"
-              className="form-control"
               name="endDate"
               value={endDate}
               onChange={this.handleFilterChange}
             />
           </div>
 
-          <div className="col-md-8 d-flex justify-content-end gap-2">
-            <button className="btn btn-info" onClick={this.fetchPreview}>
+          <div className="audit-action-buttons">
+            <button 
+              className="btn-audit btn-preview" 
+              onClick={this.fetchPreview}
+            >
               Preview Report
             </button>
           </div>
@@ -160,9 +120,9 @@ handleGenerateReport_Audit = async () => {
 
         {previewData.length > 0 && (
           <>
-            <div className="table-responsive">
-              <table className="table table-bordered table-hover">
-                <thead className="table-light">
+            <div className="audit-table-container">
+              <table className="audit-table">
+                <thead>
                   <tr>
                     {this.displayColumns.map((key, idx) => (
                       <th key={idx}>{key}</th>
@@ -181,9 +141,9 @@ handleGenerateReport_Audit = async () => {
               </table>
             </div>
 
-            <div className="text-center">
+            <div className="audit-action-buttons" style={{marginTop: '2rem'}}>
               <button
-                className="btn btn-primary mt-3"
+                className="btn-audit btn-generate"
                 onClick={this.handleGenerateReport_Audit}
               >
                 Generate PDF Report
@@ -195,5 +155,6 @@ handleGenerateReport_Audit = async () => {
     );
   }
 }
+
 
 export default AuditReports;

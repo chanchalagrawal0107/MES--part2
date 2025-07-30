@@ -24,7 +24,6 @@ class Dashboard extends Component {
     return (
       <>
         <Navbar />
-        {/* <Sidebar /> */}
         <div className="dashboard-container">
           {role === "Author" && <AuthorCards />}
           {role === "Reviewer" && <ReviewerCard />}

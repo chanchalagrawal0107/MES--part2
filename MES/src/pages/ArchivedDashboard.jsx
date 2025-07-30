@@ -5,6 +5,7 @@ class ArchivedDashboard extends Component {
   state = {
     files: [],
     selectedFile: null,
+    filter: "all",
   };
 
   componentDidMount() {
@@ -35,28 +36,54 @@ class ArchivedDashboard extends Component {
     this.setState({ selectedFile: file });
   };
 
+  handleFilterChange = (e) => {
+    this.setState({ filter: e.target.value });
+  };
+
+  getFilteredFiles = () => {
+    const { files, filter } = this.state;
+    if (filter === "all") return files;
+    return files.filter((file) =>
+      filter === "alarms"
+        ? file.toLowerCase().startsWith("alarms")
+        : file.toLowerCase().startsWith("assetcentre")
+    );
+  };
+
   render() {
-    const { files, selectedFile } = this.state;
+    const { selectedFile, filter } = this.state;
+    const filteredFiles = this.getFilteredFiles();
 
     return (
       <div className="container mt-5">
-        <h1 className="text-center text-dark mb-5 display-5 fw-bold border-bottom pb-2">
-          📁 Archived Reports
+        <h1 className="archived-heading">
+          Archived Reports
         </h1>
 
-        {/* Grid of Archived Files */}
+        <div className="report-filter">
+          <label className="form-label">Filter by Report Type:</label>
+          <select
+            className="form-select"
+            value={filter}
+            onChange={this.handleFilterChange}
+          >
+            <option value="all">All Reports</option>
+            <option value="alarms">Alarms Reports</option>
+            <option value="assetcentre">Asset Centre Reports</option>
+          </select>
+        </div>
+
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-          {files.map((file) => (
+          {filteredFiles.map((file) => (
             <div className="col" key={file}>
-              <div className="card h-100 border border-info shadow-sm">
-                <div className="card-body d-flex flex-column">
+              <div className="card report-card border border-info">
+                <div className="card-body report-card-body">
                   <h6 className="card-title text-primary fw-semibold text-truncate">
                     🧾 {file}
                   </h6>
                   <button
-                    className="btn btn-outline-info mt-auto fw-medium"
+                    className="btn btn-outline-info btn-preview"
                     onClick={() => this.handleFileClick(file)}
-                    style={{ backgroundColor: "#17a2b8", color: "white", border: "none" }}
                   >
                     Preview Report
                   </button>
@@ -66,13 +93,12 @@ class ArchivedDashboard extends Component {
           ))}
         </div>
 
-        {/* Preview Section */}
         {selectedFile && (
-          <div className="card mt-5 shadow border border-dark">
-            <div className="card-header bg-info text-white d-flex justify-content-between align-items-center">
+          <div className="card preview-card border border-dark">
+            <div className="preview-header archived">
               <h5 className="mb-0">📄 Previewing: {selectedFile}</h5>
               <button
-                className="btn btn-sm btn-outline-light"
+                className="btn btn-close-preview-sm"
                 onClick={() => this.setState({ selectedFile: null })}
               >
                 ❌ Close Preview
@@ -81,10 +107,8 @@ class ArchivedDashboard extends Component {
             <div className="card-body p-0 bg-light">
               <iframe
                 src={`http://localhost:5000/reports/approved/${selectedFile}`}
-                width="100%"
-                height="600px"
+                className="report-iframe"
                 title={selectedFile}
-                style={{ border: "none" }}
               ></iframe>
             </div>
           </div>
