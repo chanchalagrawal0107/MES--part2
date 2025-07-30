@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Navbar from "./Navbar";
 
 class AuditReports extends Component {
   constructor(props) {
@@ -84,6 +85,8 @@ handleGenerateReport_Audit = async () => {
     const { startDate, endDate, previewData } = this.state;
 
     return (
+      <>
+      <Navbar/>
       <div className="audit-reports-container">
         <h2 className="audit-reports-heading">Audit Report Generator</h2>
 
@@ -152,6 +155,8 @@ handleGenerateReport_Audit = async () => {
           </>
         )}
       </div>
+      </>
+      
     );
   }
 }

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Navbar from "./Navbar";
 
 class AuthorReports extends Component {
   constructor(props) {
@@ -85,6 +86,8 @@ class AuthorReports extends Component {
     const { startDate, endDate, previewData } = this.state;
 
     return (
+      <>
+      <Navbar/>
       <div className="audit-reports-container">
         <h2 className="audit-reports-heading">Alarms Report Generator</h2>
 
@@ -153,6 +156,8 @@ class AuthorReports extends Component {
           </>
         )}
       </div>
+      </>
+      
     );
   }
 }

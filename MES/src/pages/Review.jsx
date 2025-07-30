@@ -79,7 +79,6 @@ class ReviewerDashboard extends Component {
         <div className="container">
           <h2 className="dashboard-heading">Reviewer Dashboard</h2>
 
-<<<<<<< HEAD
           <div className="report-filter">
             <label className="form-label-custom">Filter by Report Type:</label>
             <select
@@ -98,29 +97,6 @@ class ReviewerDashboard extends Component {
               <div className="card-custom fade-in" key={file}>
                 <div className="card-body-custom">
                   <h6 className="card-title text-truncate mb-3">{file}</h6>
-=======
-        {/* Filter Dropdown */}
-        <div className="mb-4">
-          <label className="form-label"><b>Filter by Report Type:</b></label>
-          <select
-            className="form-select"
-            value={filter}
-            onChange={this.handleFilterChange}
-          >
-            <option value="all">All Reports</option>
-            <option value="alarms">Alarms Reports</option>
-            <option value="assetcentre">Asset Centre Reports</option>
-          </select>
-        </div>
-
-        {/* Report File Grid */}
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-          {filteredFiles.map((file) => (
-            <div className="col" key={file}>
-              <div className="card shadow-sm h-100 border-0">
-                <div className="card-body d-flex flex-column">
-                  <h6 className="card-title text-truncate">{file}</h6>
->>>>>>> eaf1ece763b944c6054580a9928ac9829b546ad4
                   <button
                     className="btn-custom btn-outline-custom"
                     onClick={() => this.handleFileClick(file)}
@@ -129,32 +105,7 @@ class ReviewerDashboard extends Component {
                   </button>
                 </div>
               </div>
-<<<<<<< HEAD
             ))}
-=======
-            </div>
-          ))}
-        </div>
-
-        {/* Preview Section */}
-        {selectedFile && (
-          <div className="card mt-5 shadow">
-            <div className="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-              <h5 className="mb-0">Previewing: {selectedFile}</h5>
-              <button className="btn btn-light" onClick={this.handleSign}>
-                ✅ Sign
-              </button>
-            </div>
-            <div className="card-body p-0">
-              <iframe
-                src={`http://localhost:5000/reports/generated/${selectedFile}`}
-                width="100%"
-                height="600px"
-                title={selectedFile}
-                style={{ border: "none" }}
-              ></iframe>
-            </div>
->>>>>>> eaf1ece763b944c6054580a9928ac9829b546ad4
           </div>
 
           {selectedFile && (
@@ -183,9 +134,4 @@ class ReviewerDashboard extends Component {
   }
 }
 
-<<<<<<< HEAD
 export default ReviewerDashboard;
-=======
-export default ReviewerDashboard;
-
->>>>>>> eaf1ece763b944c6054580a9928ac9829b546ad4

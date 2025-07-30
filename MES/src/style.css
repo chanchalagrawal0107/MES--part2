@@ -197,6 +197,39 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.navbar-dark {
+  background: linear-gradient(to right, #a40202, #6e0000);
+  padding: 12px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  z-index: 1030;
+  position: sticky;
+  top: 0;
+}
+
+.logout-link {
+  color: black;
+  background-color: #ffffff;
+  border: 1px solid #ffffff66;
+  padding: 6px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.logout-link:hover {
+  background-color: #ffffff;
+  color: #a40202;
+  text-decoration: none;
+  border-color: #a40202;
+  transition: 0.3s
+
+}
+
 /* ========== UTILITIES ========== */
 .text-center {
   text-align: center;
@@ -326,18 +359,25 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: var(--pure-white);
+  background:
+    radial-gradient(circle at 52% 52%, #a40202 0%, rgba(0, 0, 0, 0.267) 40%),
+    radial-gradient(circle at 1% 100%, white 0%, rgba(0, 0, 0, 0.267) 40%),
+    radial-gradient(circle at 80% 60%, #1c1111 0%, rgba(0, 0, 0, 0.267) 80%),
+    radial-gradient(circle at 40% 40%, #ff0000 0%, rgba(0, 0, 0, 0.267) 60%),
+    radial-gradient(circle at 30% 20%, white 0%, rgba(0, 0, 0, 0.267) 70%),
+    radial-gradient(circle at 30% 30%, white 0%, rgba(0, 0, 0, 0.267) 70%);
   padding: 2rem;
 }
+
 
 .auth-card {
   width: 100%;
   max-width: 450px;
-  background-color: var(--pure-white);
+  background-color: var(--medium-gray);
   border-radius: 12px;
-  padding: 2.5rem;
+  padding: 1rem;
   box-shadow: 0 8px 24px rgba(212, 0, 0, 0.1);
-  border: 1px solid var(--medium-gray);
+  border: 2px solid var(--medium-gray);
   animation: fadeIn 0.5s ease-out;
 }
 
@@ -351,11 +391,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   color: var(--primary-red);
   margin-bottom: 0.5rem;
-}
-
-.auth-subtitle {
-  color: var(--dark-gray);
-  font-size: 0.95rem;
 }
 
 /* Form Elements */
@@ -411,7 +446,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Links */
 .auth-footer {
   text-align: center;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   color: var(--dark-gray);
   font-size: 0.9rem;
 }

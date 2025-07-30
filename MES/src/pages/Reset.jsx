@@ -47,11 +47,10 @@ class Reset extends Component {
 
   render() {
     return (
-      <div className="auth-bg">
-        <div className="auth-container">
+      <div className="auth-container">
+        <div className="auth-card">
           <div className="auth-header">
             <h1 className="auth-title">Reset Password</h1>
-            <p className="auth-subtitle">Enter your details to reset password</p>
           </div>
           
           <form onSubmit={this.handleSubmit} className="auth-form">

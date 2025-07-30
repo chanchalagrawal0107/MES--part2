@@ -7,12 +7,15 @@ class ReviewerCard extends Component {
 
   render() {
     return (
-      <div className="dashboard-card" onClick={this.handleNavigate}>
-        <div className="card-body">
-          <h5 className="card-title">Review Reports</h5>
+      <div className="dashboard-container">
+        <div className="card-custom fade-in card-clickable" onClick={this.handleNavigate}>
+        <div className="card-body-custom text-center">
+          <h5 className="card-title mb-2">Review Reports</h5>
           <p className="card-text">Check reports from authors and sign</p>
         </div>
       </div>
+      </div>
+      
     );
   }
 }
