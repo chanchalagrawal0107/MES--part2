@@ -56,12 +56,22 @@ class ArchivedDashboard extends Component {
 
     return (
       <div className="container mt-5">
+<<<<<<< HEAD
         <h1 className="archived-heading">
           Archived Reports
         </h1>
 
         <div className="report-filter">
           <label className="form-label">Filter by Report Type:</label>
+=======
+        <h1 className="text-center text-dark mb-4 display-5 fw-bold border-bottom pb-2">
+          📁 Archived Reports
+        </h1>
+
+        {/* Filter Dropdown */}
+        <div className="mb-4">
+          <label className="form-label"><b>Filter by Report Type:</b></label>
+>>>>>>> eaf1ece763b944c6054580a9928ac9829b546ad4
           <select
             className="form-select"
             value={filter}
@@ -73,6 +83,10 @@ class ArchivedDashboard extends Component {
           </select>
         </div>
 
+<<<<<<< HEAD
+=======
+        {/* Grid of Archived Files */}
+>>>>>>> eaf1ece763b944c6054580a9928ac9829b546ad4
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
           {filteredFiles.map((file) => (
             <div className="col" key={file}>
