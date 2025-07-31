@@ -55,7 +55,6 @@ class App extends Component {
     return (
       <Router>
         <Routes>
-          {/* Public Routes */}
           <Route
             path="/"
             element={
@@ -66,34 +65,45 @@ class App extends Component {
               )
             }
           />
-          <Route path="/register" element={<Register />} />
-          <Route path="/reset" element={<Reset />} />
+          <Route
+            path="/dashboard"
+            element={
+              isAuthenticated ? (
+                <Dashboard onLogout={this.handleLogout} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
+          <Route path="/author/reports" element={<AuthorReports />} />
+          <Route path="/audit/reports" element={<AuditReports />} />
+          <Route path="/register" element={<this.RegisterWithNavigate />} />
+          <Route path="/reset" element={<this.ResetWithNavigate />} />
+          <Route
+            path="/review"
+            element={
+              <ProtectedRouteWithRole allowedRole="Reviewer">
+                <Review />
+              </ProtectedRouteWithRole>
+            }
+          />
+
+          <Route
+            path="/approve"
+            element={
+              <ProtectedRouteWithRole allowedRole="Approver">
+                <Approve />
+              </ProtectedRouteWithRole>
+            }
+          />
+          <Route
+            path="/archived"
+            element={<ProtectedRouteWithRole allowedRole="Approver">
+              <ArchivedDashboard/>
+              </ProtectedRouteWithRole>
+              }
+          />
           <Route path="/unauthorized" element={<Unauthorized />} />
-
-          {/* Protected Routes with Role-based Access */}
-          <Route element={<ProtectedRouteWithRole allowedRoles={['Author', 'Reviewer', 'Approver']} />}>
-            <Route path="/dashboard" element={<Dashboard onLogout={this.handleLogout} />} />
-          </Route>
-
-          <Route element={<ProtectedRouteWithRole allowedRoles={['Author']} />}>
-            <Route path="/author/reports" element={<AuthorReports />} />
-          </Route>
-
-          <Route element={<ProtectedRouteWithRole allowedRoles={['Approver']} />}>
-            <Route path="/audit/reports" element={<AuditReports />} />
-            <Route path="/archived" element={<ArchivedDashboard />} />
-          </Route>
-
-          <Route element={<ProtectedRouteWithRole allowedRoles={['Reviewer']} />}>
-            <Route path="/review" element={<Review />} />
-          </Route>
-
-          <Route element={<ProtectedRouteWithRole allowedRoles={['Approver']} />}>
-            <Route path="/approve" element={<Approve />} />
-          </Route>
-
-          {/* Catch-all route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     );
