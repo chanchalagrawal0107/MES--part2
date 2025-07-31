@@ -101,14 +101,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary-custom {
-  background: var(--primary-red);
+  background: #0a9c05;
   color: white;
 }
 
 .btn-primary-custom:hover {
-  background: #8a0000;
+  background: #0a6c11;
   transform: scale(1.03);
   box-shadow: 0 4px 10px rgba(164, 2, 2, 0.2);
+  font-weight: bold;
 }
 
 .btn-outline-custom {
@@ -226,7 +227,9 @@ h1, h2, h3, h4, h5, h6 {
   color: #a40202;
   text-decoration: none;
   border-color: #a40202;
-  transition: 0.3s
+  /* transition: 0.3s; */
+  transform: scale(1.2);
+  font-weight: bolder;
 
 }
 
@@ -291,11 +294,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .preview-header {
-  background: var(--primary-red);
-  color: white;
+  background: white;
+  color: var(--accent-dark); /* Changed from white to dark for better visibility */
   padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--secondary-gray);
+}
+
+.preview-header-buttons {
+  display: flex;
+  gap: 12px; /* Space between buttons */
   align-items: center;
 }
 
@@ -304,6 +314,26 @@ h1, h2, h3, h4, h5, h6 {
   height: 600px;
   border: none;
   background: white;
+}
+
+.btn-close-preview-sm {
+  background-color: var(--primary-red);
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: var(--transition);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close-preview-sm:hover {
+  background-color: #8a0000;
+  transform: scale(1.03);
+  box-shadow: 0 4px 10px rgba(164, 2, 2, 0.2);
 }
 
 /* ========== RESPONSIVE DESIGN ========== */

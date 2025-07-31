@@ -114,12 +114,20 @@ class ApproverDashboard extends Component {
             <div className="preview-container fade-in">
               <div className="preview-header">
                 <h5 className="mb-0">Previewing: {selectedFile}</h5>
-                <button 
-                  className="btn-custom btn-primary-custom"
-                  onClick={this.handleApprove}
-                >
-                  ✅ Approve Report
-                </button>
+                <div className="preview-header-buttons">
+                  <button
+                    className="btn-custom btn-primary-custom"
+                    onClick={this.handleApprove}
+                  >
+                    Approve Report
+                  </button>
+                  <button
+                    className="btn-close-preview-sm"
+                    onClick={() => this.setState({ selectedFile: null })}
+                  >
+                    Close Preview
+                  </button>
+                </div>
               </div>
               <div className="p-0">
                 <iframe
@@ -129,7 +137,7 @@ class ApproverDashboard extends Component {
                 ></iframe>
               </div>
             </div>
-          )}
+)}
         </div>
       </>
     );

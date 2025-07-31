@@ -112,12 +112,21 @@ class ReviewerDashboard extends Component {
             <div className="preview-container fade-in">
               <div className="preview-header">
                 <h5 className="mb-0">Previewing: {selectedFile}</h5>
-                <button 
-                  className="btn-custom btn-primary-custom"
-                  onClick={this.handleSign}
-                >
-                  ✅ Sign Report
-                </button>
+                
+                <div className="preview-header-buttons">
+                  <button
+                    className="btn-custom btn-primary-custom"
+                    onClick={this.handleSign}
+                  >
+                    Review Report
+                  </button>
+                  <button
+                    className="btn-close-preview-sm"
+                    onClick={() => this.setState({ selectedFile: null })}
+                  >
+                    Close Preview
+                  </button>
+                </div>
               </div>
               <div className="p-0">
                 <iframe
